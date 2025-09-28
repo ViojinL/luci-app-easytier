@@ -11,12 +11,15 @@ on:
         description: '请填写发布的说明'
         required: false
         default: ''
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 env:
   TAG: "${{ github.event.inputs.tag }}"
   TZ: Asia/Shanghai
+
 permissions:
   contents: write
 
@@ -30,7 +33,7 @@ jobs:
         arch:
           - x86_64
         sdk:
-          - 23.05.5   # ✅ 改成 23.05.5
+          - 23.05.5   # ✅ 已改成 Kwrt 对应的 OpenWrt SDK 版本
 
     steps:
       - uses: actions/checkout@v4
@@ -81,10 +84,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
+            > ### ![](https://img.shields.io/badge/编译时间-${{ env.build_time }}-easytier?logo=github&labelColor=blue)![](https://img.shields.io/github/downloads/${{ github.repository }}/${{ env.TAG }}/total?label=下载次数&logo=github)
 
-            > ### ![](https://img.shields.io/badge/%E7%BC%96%E8%AF%91%E6%97%B6%E9%97%B4-${{ env.build_time }}-easytier?logo=github&labelColor=%E9%A1%BB)![](https://img.shields.io/github/downloads/${{ github.repository }}/${{ env.TAG }}/total?label=%E4%B8%8B%E8%BD%BD%E6%AC%A1%E6%95%B0&logo=github)
-
-            - **`23.05.5`** 内是 ipk 安装包，可以直接在 Kwrt 23.05.5 (x86_64) 上安装  
+            - **23.05.5** 内是 ipk 安装包，可以直接在 Kwrt 23.05.5 (x86_64) 上安装  
               `opkg install ./luci-app-easytier.ipk`
 
-            ${{ github.event.inputs.t
+            ${{ github.event.inputs.text }}
+          tag_name: ${{ env.TAG }}
+          files: EasyTier-${{ env.TAG }}-${{ matrix.arch }}-${{ matrix.sdk }}.zip
