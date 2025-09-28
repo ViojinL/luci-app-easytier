@@ -12,8 +12,9 @@ on:
         required: false
         default: ''
 
+# ✅ 并发控制：允许不同 tag 并行，不会互相取消
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.tag }}
   cancel-in-progress: true
 
 env:
@@ -33,7 +34,7 @@ jobs:
         arch:
           - x86_64
         sdk:
-          - 23.05.5   # ✅ 已改成 Kwrt 对应的 OpenWrt SDK 版本
+          - 23.05.5
 
     steps:
       - uses: actions/checkout@v4
